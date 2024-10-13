@@ -11,6 +11,7 @@ import com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.service.Us
 import com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.util.Mapping;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -72,5 +73,12 @@ public class UserServiceIMPL implements UserService {
             tmpUser.get().setPassword(userDTO.getPassword());
             tmpUser.get().setProfilePic(userDTO.getProfilePic());
         }
+    }
+
+    @Override
+    public UserDetailsService userDetailsService() {
+        return userName ->
+                userDAO.findByEmail(userName)
+                        .orElseThrow(()-> new UserNotFoundException("User Not Found"));
     }
 }
