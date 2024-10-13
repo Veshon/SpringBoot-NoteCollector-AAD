@@ -1,5 +1,6 @@
 package com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +12,14 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
+
+    @Value("${secure.username}")
+    private String userName;
+    @Value("${secure.password}")
+    private String password;
+    @Value("${secure.role}")
+    private String role;
+
     @Bean
     SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
@@ -24,9 +33,9 @@ public class SecurityConfig {
     @Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
         UserDetails principleUser = User.withDefaultPasswordEncoder()
-                .username("Sam")
-                .password("1234")
-                .roles("USER").build();
+                .username(userName)
+                .password(password)
+                .roles(role).build();
         return new InMemoryUserDetailsManager(principleUser);
     }
 }
