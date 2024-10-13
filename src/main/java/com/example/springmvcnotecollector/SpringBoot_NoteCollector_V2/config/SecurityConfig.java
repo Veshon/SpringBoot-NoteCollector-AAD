@@ -10,32 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
 public class SecurityConfig {
 
-    @Value("${secure.username}")
-    private String userName;
-    @Value("${secure.password}")
-    private String password;
-    @Value("${secure.role}")
-    private String role;
-
-    @Bean
-    SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests()
-                .anyRequest().authenticated()
-                .and()
-                .httpBasic();
-        return http.build();
-    }
-
-    @Bean
-    public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
-        UserDetails principleUser = User.withDefaultPasswordEncoder()
-                .username(userName)
-                .password(password)
-                .roles(role).build();
-        return new InMemoryUserDetailsManager(principleUser);
-    }
 }
