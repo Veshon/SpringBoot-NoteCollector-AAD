@@ -2,7 +2,6 @@ package com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.config;
 
 import com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +17,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -25,6 +25,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 public class SecurityConfig {
 
     private final UserService userService;
+    private final JWTConfigFilter jwtConfigFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception{
@@ -53,7 +54,6 @@ public class SecurityConfig {
         dap.setPasswordEncoder(passwordEncoder());
         return dap;
     }
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
