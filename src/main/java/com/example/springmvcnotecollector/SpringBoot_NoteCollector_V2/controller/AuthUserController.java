@@ -53,10 +53,7 @@ public class AuthUserController { // Doing from this class: Refresh Token, Sign 
             buildUserDTO.setRole(Role.valueOf(role));
             buildUserDTO.setProfilePic(base64ProPic);
 
-            //Todo: Change with auth user service
-            authService.signUp(buildUserDTO);
-            userService.saveUser(buildUserDTO);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return ResponseEntity.ok(authService.signUp(buildUserDTO));
         } catch (DataPersistException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
