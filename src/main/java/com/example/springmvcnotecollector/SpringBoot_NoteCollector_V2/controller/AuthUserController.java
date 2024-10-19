@@ -19,12 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("api/v1/auth/")
 @RestController
 @RequiredArgsConstructor
-
-public class AuthUserController { // Doing from this class: Refresh Token, Sign Up, Sing In
+public class AuthUserController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping(value = "signup", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,6 +34,7 @@ public class AuthUserController { // Doing from this class: Refresh Token, Sign 
             @RequestPart("password") String password,
             @RequestPart("role") String role,
             @RequestPart("profilePic") MultipartFile profilePic
+            //add role
     ) {
         // profilePic ----> Base64
         String base64ProPic = "";
@@ -52,7 +52,6 @@ public class AuthUserController { // Doing from this class: Refresh Token, Sign 
             buildUserDTO.setPassword(passwordEncoder.encode(password));
             buildUserDTO.setRole(Role.valueOf(role));
             buildUserDTO.setProfilePic(base64ProPic);
-
             return ResponseEntity.ok(authService.signUp(buildUserDTO));
         } catch (DataPersistException e) {
             e.printStackTrace();
@@ -62,12 +61,12 @@ public class AuthUserController { // Doing from this class: Refresh Token, Sign 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PostMapping(value = "signin", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "signin",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JWTAuthResponse> signIn(@RequestBody SignIn signIn){
         return ResponseEntity.ok(authService.signIn(signIn));
     }
     @PostMapping("refresh")
-    public ResponseEntity<JWTAuthResponse> refreshToken(@RequestParam ("refreshToken") String existingToken) {
+    public ResponseEntity<JWTAuthResponse> refreshToken(@RequestParam ("existingToken") String existingToken) {
         return ResponseEntity.ok(authService.refreshToken(existingToken));
     }
 }

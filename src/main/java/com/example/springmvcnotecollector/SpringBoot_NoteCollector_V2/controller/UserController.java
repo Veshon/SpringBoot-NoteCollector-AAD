@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,39 +25,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-        public ResponseEntity<Void> saveUser(
-                @RequestPart("firstName") String firstName,
-                @RequestPart("lastName") String lastName,
-                @RequestPart("email") String email,
-                @RequestPart("password") String password,
-                @RequestPart("profilePic") MultipartFile profilePic){
-
-            // profilePic ----> Base64
-            String base64ProPic = "";
-
-            try {
-                byte [] bytesProPic = profilePic.getBytes(); //Converting profile pic to byte array
-                base64ProPic = AppUtil.profilePicToBase64(bytesProPic);
-                String userId = AppUtil.generateUserId(); //Generating UUID
-
-                var buildUserDTO = new UserDTO(); //Creating obj
-                buildUserDTO.setUserId(userId);
-                buildUserDTO.setFirstName(firstName);
-                buildUserDTO.setLastName(lastName);
-                buildUserDTO.setEmail(email);
-                buildUserDTO.setPassword(password);
-                buildUserDTO.setProfilePic(base64ProPic);
-
-                userService.saveUser(buildUserDTO);
-                return new ResponseEntity<>(HttpStatus.CREATED);
-            }catch (DataPersistException e){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }catch (Exception e){
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-    }
 
     @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public UserStatus getSelectedUser(@PathVariable ("userId") String userId){
@@ -98,6 +66,7 @@ public class UserController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserDTO> getAllUsers(){
         return userService.getAllUsers();
     }
