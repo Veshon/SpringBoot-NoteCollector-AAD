@@ -41,6 +41,10 @@ public class AuthServiceIMPL implements AuthService {
 
     @Override
     public JWTAuthResponse refreshToken(String accessToken) {
-        return null;
+        var userName = jwtService.extractUserName(accessToken);
+        var findUser = userDAO.findByEmail(userName)
+                .orElseThrow(() -> new UserNotFoundException("User Not Found"));
+        var refreshToken = jwtService.refreshToken(findUser);
+        return JWTAuthResponse.builder().token(refreshToken).build();
     }
 }

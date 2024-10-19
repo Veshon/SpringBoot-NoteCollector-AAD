@@ -67,7 +67,7 @@ public class AuthUserController { // Doing from this class: Refresh Token, Sign 
         return ResponseEntity.ok(authService.signIn(signIn));
     }
     @PostMapping("refresh")
-    public ResponseEntity<JWTAuthResponse> signIn(@RequestParam ("refreshToken") String refreshToken) {
-        return null;
+    public ResponseEntity<JWTAuthResponse> refreshToken(@RequestParam ("refreshToken") String existingToken) {
+        return ResponseEntity.ok(authService.refreshToken(existingToken));
     }
 }
