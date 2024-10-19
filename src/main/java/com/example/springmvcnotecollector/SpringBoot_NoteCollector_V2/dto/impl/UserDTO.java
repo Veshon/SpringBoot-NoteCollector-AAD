@@ -1,6 +1,7 @@
 package com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.dto.impl;
 
 import com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.dto.UserStatus;
+import com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class UserDTO implements UserStatus {
     private String email;
     private String password;
     private String profilePic;
+    private Role role;
     private List<NoteDTO> notes;
 }
 

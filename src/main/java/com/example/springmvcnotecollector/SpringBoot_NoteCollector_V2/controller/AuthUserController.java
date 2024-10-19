@@ -1,9 +1,11 @@
 package com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.controller;
 
 import com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.dto.impl.UserDTO;
+import com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.entity.Role;
 import com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.exception.DataPersistException;
 import com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.secure.JWTAuthResponse;
 import com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.secure.SignIn;
+import com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.service.AuthService;
 import com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.service.UserService;
 import com.example.springmvcnotecollector.SpringBoot_NoteCollector_V2.util.AppUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class AuthUserController { // Doing from this class: Refresh Token, Sign 
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthService authService;
 
     @PostMapping(value = "signup", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -30,6 +33,7 @@ public class AuthUserController { // Doing from this class: Refresh Token, Sign 
             @RequestPart("lastName") String lastName,
             @RequestPart("email") String email,
             @RequestPart("password") String password,
+            @RequestPart("role") String role,
             @RequestPart("profilePic") MultipartFile profilePic
     ) {
         // profilePic ----> Base64
@@ -45,11 +49,12 @@ public class AuthUserController { // Doing from this class: Refresh Token, Sign 
             buildUserDTO.setFirstName(firstName);
             buildUserDTO.setLastName(lastName);
             buildUserDTO.setEmail(email);
-            buildUserDTO.setPassword(password);
             buildUserDTO.setPassword(passwordEncoder.encode(password));
+            buildUserDTO.setRole(Role.valueOf(role));
             buildUserDTO.setProfilePic(base64ProPic);
 
             //Todo: Change with auth user service
+            authService.signUp(buildUserDTO);
             userService.saveUser(buildUserDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DataPersistException e) {
