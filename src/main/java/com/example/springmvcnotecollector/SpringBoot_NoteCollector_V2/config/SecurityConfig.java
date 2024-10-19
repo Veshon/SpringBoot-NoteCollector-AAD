@@ -54,6 +54,7 @@ public class SecurityConfig {
         dap.setPasswordEncoder(passwordEncoder());
         return dap;
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();

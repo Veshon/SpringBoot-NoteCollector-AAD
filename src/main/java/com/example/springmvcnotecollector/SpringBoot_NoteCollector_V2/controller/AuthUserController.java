@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 
-public class AuthUserController {
+public class AuthUserController { // Doing from this class: Refresh Token, Sign Up, Sing In
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -49,7 +49,7 @@ public class AuthUserController {
             buildUserDTO.setPassword(passwordEncoder.encode(password));
             buildUserDTO.setProfilePic(base64ProPic);
 
-            //Todo: Chane with auth user service
+            //Todo: Change with auth user service
             userService.saveUser(buildUserDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DataPersistException e) {
@@ -62,10 +62,10 @@ public class AuthUserController {
     }
     @PostMapping("signin")
     public ResponseEntity<JWTAuthResponse> signIn(@RequestBody SignIn signIn){
-        //
+        return null;
     }
     @PostMapping("refresh")
     public ResponseEntity<JWTAuthResponse> signIn(@RequestParam ("refreshToken") String refreshToken) {
-        //
+        return null;
     }
 }
